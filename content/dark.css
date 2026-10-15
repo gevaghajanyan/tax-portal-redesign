@@ -1,0 +1,284 @@
+/* ============================================================
+   Dark mode — activated by body.tax-dark (set from content.js
+   based on user's "theme" setting: light / dark / system).
+   Overrides target the biggest surfaces (page bg, cards, inputs,
+   data tables, modals) without rewriting every rule.
+   ============================================================ */
+
+body.modern-tax-portal.tax-dark {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Sidebar */
+body.modern-tax-portal.tax-dark ul.profile-tabs {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li a {
+  color: #cbd5e1 !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li a:hover {
+  background: #1e293b !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li.tabsel {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.15) !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li.tabsel a {
+  background: transparent !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Submenu (horizontal tab bar) */
+body.modern-tax-portal.tax-dark ul.submenu {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.modern-tax-portal.tax-dark ul.submenu li a {
+  color: #cbd5e1 !important;
+}
+
+body.modern-tax-portal.tax-dark ul.submenu li a:hover {
+  background: #1e293b !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+body.modern-tax-portal.tax-dark ul.submenu li a.current {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.15) !important;
+  color: var(--tp, #2563eb) !important;
+  box-shadow: inset 0 0 0 1px rgba(var(--tp-rgb, 37, 99, 235), 0.35) !important;
+}
+
+body.modern-tax-portal.tax-dark #subTabs ~ table .auxLabel {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark a.hoverLink {
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Notifications sidebar header */
+body.modern-tax-portal.tax-dark td.gradient[align="center"] {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.12) !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Main content card */
+body.modern-tax-portal.tax-dark .dr-pnl.rich-panel {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.modern-tax-portal.tax-dark .dr-pnl-b.rich-panel-body {
+  background: #111827 !important;
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark .dr-pnl.rich-panel .dr-pnl.rich-panel {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+/* Fieldsets become darker grouped sections */
+body.modern-tax-portal.tax-dark fieldset {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Data tables inside dark cards */
+body.modern-tax-portal.tax-dark fieldset table,
+body.modern-tax-portal.tax-dark table[border="1"] {
+  background: #0b1220 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark fieldset table td,
+body.modern-tax-portal.tax-dark table[border="1"] td {
+  color: #e2e8f0 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark fieldset table td:first-child,
+body.modern-tax-portal.tax-dark table[border="1"] td:first-child {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList table td[width],
+body.modern-tax-portal.tax-dark #mainForm\:financialInfo table td[width],
+body.modern-tax-portal.tax-dark #mainForm\:bankBlock table td[width] {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList table td[align="center"],
+body.modern-tax-portal.tax-dark #mainForm\:financialInfo table td[align="center"] {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Officialese block in dark */
+body.modern-tax-portal.tax-dark #formContentContainer > table,
+body.modern-tax-portal.tax-dark #formContentContainer > table td {
+  color: #64748b !important;
+}
+
+body.modern-tax-portal.tax-dark .higlighted {
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Form inputs */
+body.modern-tax-portal.tax-dark input[type="text"],
+body.modern-tax-portal.tax-dark input[type="password"],
+body.modern-tax-portal.tax-dark select {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+body.modern-tax-portal.tax-dark input[type="text"][readonly],
+body.modern-tax-portal.tax-dark #mainForm\:employerList input[type="text"][readonly],
+body.modern-tax-portal.tax-dark #mainForm\:financialInfo input[type="text"][readonly],
+body.modern-tax-portal.tax-dark #mainForm\:bankBlock input[type="text"][readonly] {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:quarterlyTotalPaidAmount,
+body.modern-tax-portal.tax-dark #mainForm\:inputReturnAmount,
+body.modern-tax-portal.tax-dark #mainForm\:mortgageLoanPaidTotal,
+body.modern-tax-portal.tax-dark #mainForm\:itrCalculatedRefundAmount,
+body.modern-tax-portal.tax-dark #mainForm\:itrActualRefund {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark input.rich-calendar-input {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+body.modern-tax-portal.tax-dark img.rich-calendar-button {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+/* Calendar popup */
+body.modern-tax-portal.tax-dark .rich-calendar-popup,
+body.modern-tax-portal.tax-dark .rich-calendar-exterior {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark .rich-calendar-cell {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark .rich-calendar-cell:hover {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.2) !important;
+}
+
+/* Action area / button line */
+body.modern-tax-portal.tax-dark .button-line {
+  background: #0f172a !important;
+}
+
+/* Modal panels */
+body.modern-tax-portal.tax-dark .rich-modalpanel .rich-mp-content {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark .rich-modalpanel .rich-mpnl-body {
+  background: #111827 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Wait panel */
+body.modern-tax-portal.tax-dark #waitPanelContentDiv {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark #waitPanelContentTable td {
+  color: #e2e8f0 !important;
+}
+
+/* Table footer / search results in dark */
+body.modern-tax-portal.tax-dark table.dr-table.rich-table {
+  background: #0b1220 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark th.dr-table-subheadercell,
+body.modern-tax-portal.tax-dark th.rich-table-subheadercell {
+  background: #111827 !important;
+  color: #cbd5e1 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark .capit {
+  color: #94a3b8 !important;
+}
+
+/* Secondary button on login */
+body.modern-tax-portal.tax-dark a#mainForm\:newRegistration,
+body.modern-tax-portal.tax-dark a.submit.gradientGrey,
+body.modern-tax-portal.tax-dark .submit.gradientGrey {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+body.modern-tax-portal.tax-dark a#mainForm\:newRegistration:hover,
+body.modern-tax-portal.tax-dark a.submit.gradientGrey:hover {
+  background: #334155 !important;
+}
+
+/* Login card */
+body.modern-tax-portal.tax-dark #middleCell .dr-pnl.rich-panel {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCell .dr-pnl-b.rich-panel-body {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCellTbl td {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCellTbl > tbody > tr:first-child > td[colspan="2"] {
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCellTbl td[align="right"] {
+  color: #94a3b8 !important;
+}
+
+/* Separators / dividers */
+body.modern-tax-portal.tax-dark .rich-separator {
+  background: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark fieldset table tr td,
+body.modern-tax-portal.tax-dark table[border="1"] tr td {
+  border-bottom-color: #1e293b !important;
+}
+
+/* Footer copyright */
+body.modern-tax-portal.tax-dark .auxLabel[align="right"],
+body.modern-tax-portal.tax-dark td.auxLabel {
+  color: #64748b !important;
+}

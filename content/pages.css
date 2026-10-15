@@ -1,0 +1,836 @@
+/* ============================================================
+   Income tax return — employer & quarterly totals cards
+   The source markup is a 7-cell <tr> (label|value|label|value|
+   label|value|error) that squeezes each input to ~100px on
+   desktop. We rebuild each <tr> as a 2-column CSS grid so the
+   natural DOM order (label, value, label, value, ...) always
+   pairs: row 1 = [label1|value1], row 2 = [label2|value2], etc.
+   On mobile we collapse to 1 column.
+   ============================================================ */
+
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"],
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody {
+  display: block !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  margin: 0 0 12px 0 !important;
+  overflow: visible !important;
+}
+
+/* 2-column grid: label on the left, value on the right.
+   This naturally pairs DOM-adjacent label|value tds. */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr {
+  display: grid !important;
+  grid-template-columns: minmax(180px, 1fr) minmax(220px, 2fr) !important;
+  gap: 8px 14px !important;
+  align-items: center !important;
+  margin: 0 0 8px 0 !important;
+  padding: 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+}
+
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td {
+  display: block !important;
+  padding: 6px 4px !important;
+  border: none !important;
+  background: transparent !important;
+  min-width: 0 !important;
+  width: auto !important;
+  vertical-align: middle !important;
+  text-align: left !important;
+}
+
+/* Label cell: muted, slightly smaller, right side separator */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[width] {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
+  padding: 6px 10px 6px 4px !important;
+}
+
+/* Value cell */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[align="center"] {
+  text-align: left !important;
+  padding: 2px 4px !important;
+  color: #0f172a !important;
+}
+
+/* Inputs and inline value spans — large, readable */
+body.modern-tax-portal #mainForm\:employerList_body input[type="text"] {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 9px 12px !important;
+  display: block !important;
+  color: #0f172a !important;
+}
+
+/* Only non-rich-message spans get the chip look — the validation
+   placeholder spans (also id^="mainForm:employerRow") must stay invisible */
+body.modern-tax-portal #mainForm\:employerList_body td > span[id^="mainForm\:employerRow"]:not(.rich-message) {
+  display: inline-block !important;
+  width: auto !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  padding: 8px 12px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  letter-spacing: 0.3px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Hide empty validation message pills so they stop rendering as empty
+   light-blue boxes under values */
+body.modern-tax-portal #mainForm\:employerList_body span.rich-message:not(.errorMsg) {
+  display: inline !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.modern-tax-portal #mainForm\:employerList_body span.rich-message:not(.errorMsg) > .rich-message-label:empty,
+body.modern-tax-portal #mainForm\:employerList_body span.rich-message:not(.errorMsg):has(> .rich-message-label:empty) {
+  display: none !important;
+}
+
+/* The trailing error/status cell (last <td align="center"> with no label
+   partner — the "Եկամտային հարկը վճարված չէ" red note). It's the 7th
+   cell in a 6-column pair layout, so span both columns and show as alert. */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[align="center"]:last-child:not(:nth-child(even)) {
+  grid-column: 1 / -1 !important;
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 8px !important;
+  color: #b91c1c !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+  padding: 10px 12px !important;
+  margin-top: 4px !important;
+}
+
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[align="center"]:last-child:not(:nth-child(even)) span[style*="color:red"] {
+  color: #b91c1c !important;
+}
+
+/* colspan=5 row (consent checkbox) spans both grid columns */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan="5"] {
+  grid-column: 1 / -1 !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  color: #334155 !important;
+  font-weight: 400 !important;
+  font-size: 13px !important;
+}
+
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan="5"] div {
+  text-align: left !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+/* Empty trailing td on the consent row — hide */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan="5"] ~ td:empty {
+  display: none !important;
+}
+
+/* The row that holds the consent checkbox has only 1 visible td
+   (colspan=5) + 1 empty td. Collapse to a single-column grid. */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr:has(> td[colspan="5"]) {
+  grid-template-columns: 1fr !important;
+  padding: 10px !important;
+}
+
+/* The totals row: two colspan=3 cells side-by-side.
+   Each shows "Հաշվարկված վերադարձվող գումար" + inline input + optional
+   trailing calc button. Lay these two cells on the grid's two columns. */
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr:has(> td[colspan="3"]) {
+  grid-template-columns: 1fr 1fr !important;
+  align-items: center !important;
+}
+
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan="3"] {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  line-height: 1.4 !important;
+}
+
+body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan="3"] input[type="text"] {
+  flex: 1 1 100px !important;
+  min-width: 100px !important;
+  width: auto !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 8px 12px !important;
+  text-align: right !important;
+  font-variant-numeric: tabular-nums !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  background: #ffffff !important;
+}
+
+/* Inline validation message hugs the input */
+body.modern-tax-portal #mainForm\:employerList_body .rich-message.errorMsg {
+  margin-top: 4px !important;
+  font-size: 11px !important;
+}
+
+/* ---------- Mobile: collapse to 1 column so each field has full width ---------- */
+@media (max-width: 640px) {
+  body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+    padding: 10px !important;
+  }
+
+  body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr > td[width] {
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+    color: #475569 !important;
+    padding: 2px 2px 0 2px !important;
+  }
+
+  body.modern-tax-portal #mainForm\:employerList_body table[border="1"] > tbody > tr:has(> td[colspan="3"]) {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ---------- Dark-mode counterparts ---------- */
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body table[border="1"] > tbody > tr {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body table[border="1"] > tbody > tr > td[width] {
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body table[border="1"] > tbody > tr > td[align="center"] {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body td > span[id^="mainForm\:employerRow"] {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body table[border="1"] > tbody > tr > td[align="center"]:last-child:not(:nth-child(even)) {
+  background: rgba(220, 38, 38, 0.12) !important;
+  border-color: rgba(220, 38, 38, 0.35) !important;
+  color: #fca5a5 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan] {
+  background: #0b1220 !important;
+  border-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList_body table[border="1"] > tbody > tr > td[colspan="3"] input[type="text"] {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #1e293b !important;
+}
+
+/* ---------- Refundable-money-available notification modal ----------
+   RichFaces modal with inline width:500px / height:230px holding an
+   icon|text 2-col table. We override the inline sizing, upgrade the
+   info icon to a tinted rounded tile, and give the body a soft tint
+   callout so the Armenian notification reads as a proper alert card. */
+
+/* Override the outer RichFaces panel container width (JS-managed via
+   inline style). Without this, the inner div stays constrained to 500px. */
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanel,
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContainer,
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContainer > .rich-mp-container {
+  width: auto !important;
+  max-width: min(560px, 92vw) !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv {
+  width: 60dvw !important;
+  min-width: 0 !important;
+  max-width: min(560px, 92vw) !important;
+  height: auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentTable {
+  width: 100% !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentTable,
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentTable > tbody,
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentTable > tbody > tr {
+  display: block !important;
+  height: auto !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentTable > tbody > tr > td {
+  display: block !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Header "Ուշադրություն" — reuse the gradient header, just tighten padding
+   so the close button has room */
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelHeader {
+  color: #ffffff !important;
+  padding: 14px 48px 14px 20px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  letter-spacing: 0.3px !important;
+  white-space: normal !important;
+  cursor: move !important;
+}
+
+/* Body: plain icon|text row (no nested card background — the modal
+   itself is already the card, so the previous tinted callout was
+   double-boxed and ate text width). */
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body {
+  padding: 20px 22px 22px 22px !important;
+  background: #ffffff !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table,
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody,
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr > td {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  width: auto !important;
+}
+
+/* Icon tile — small rounded brand chip, aligned with first text line */
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr > td[width="50px"] {
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  height: 36px !important;
+  margin-top: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--tp, #2563eb) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 10px rgba(var(--tp-rgb, 37, 99, 235), 0.25) !important;
+}
+
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body img[src*="icon-info"] {
+  width: 18px !important;
+  height: 18px !important;
+  filter: brightness(0) invert(1) !important;
+}
+
+/* Text takes all remaining width — flex: 1 with min-width:0 so long
+   Armenian words don't force the column to shrink to one word per line */
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr > td[valign="middle"]:not([width]) {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  color: #0f172a !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  font-weight: 400 !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Hide the trailing <br> that forces extra space below the message */
+body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > br {
+  display: none !important;
+}
+
+/* Close button — tighter target, subtle hover */
+body.modern-tax-portal #hidelink_refundableMoneyAvailableNotificationPanel {
+  width: 20px !important;
+  height: 20px !important;
+  padding: 4px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+}
+
+body.modern-tax-portal #hidelink_refundableMoneyAvailableNotificationPanel:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Dark mode variants */
+body.modern-tax-portal.tax-dark #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr {
+  background: transparent !important;
+  border: none !important;
+}
+
+body.modern-tax-portal.tax-dark #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr > td[valign="middle"]:not([width]) {
+  color: #e2e8f0 !important;
+}
+
+/* Responsive: tighter paddings + stack icon above text on phones */
+@media (max-width: 480px) {
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanel,
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContainer,
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContainer > .rich-mp-container,
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv {
+    max-width: 94vw !important;
+  }
+
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body > div > table > tbody > tr {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanelHeader {
+    font-size: 14px !important;
+    padding: 12px 44px 12px 16px !important;
+  }
+
+  body.modern-tax-portal #refundableMoneyAvailableNotificationPanelContentDiv .rich-mpnl-body {
+    padding: 16px !important;
+  }
+}
+
+/* ============================================================
+   Login page (and any standalone centered-form page)
+   Detected by #middleCell / #middleCellTbl in the DOM.
+   ============================================================ */
+
+/* Defensive: if a stale toggle button lingers in the DOM, hide it */
+body.modern-tax-portal button.tax-sidebar-toggle,
+body.modern-tax-portal .tax-sidebar-toggle {
+  display: none !important;
+}
+
+/* Center the login row vertically within the viewport */
+body.modern-tax-portal tr#middleCell > td {
+  vertical-align: middle !important;
+  padding: 32px 16px !important;
+  text-align: center !important;
+}
+
+/* The login card — centered, modern, overrides inline width:400px + #eeeeee bg */
+body.modern-tax-portal #middleCell .dr-pnl.rich-panel {
+  width: 100% !important;
+  max-width: 440px !important;
+  margin: 0 auto !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.08),
+    0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  overflow: hidden !important;
+  text-align: left !important;
+  display: inline-block !important;
+}
+
+body.modern-tax-portal #middleCell .dr-pnl-b.rich-panel-body {
+  padding: 32px 28px 24px 28px !important;
+  background: #ffffff !important;
+}
+
+/* Flatten every nested table inside the card: full width, no backgrounds */
+body.modern-tax-portal #middleCellTbl,
+body.modern-tax-portal #middleCellTbl table {
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  border-spacing: 0 !important;
+  border-collapse: collapse !important;
+  max-width: 100% !important;
+}
+
+body.modern-tax-portal #middleCellTbl td {
+  background: transparent !important;
+  border: none !important;
+  padding: 5px 4px !important;
+  vertical-align: middle !important;
+}
+
+/* Intro paragraph (Դուք դեռևս չունե՞ք ...) */
+body.modern-tax-portal #middleCellTbl > tbody > tr:first-child > td[colspan="2"] {
+  color: #475569 !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  padding: 0 0 14px 0 !important;
+  text-align: center !important;
+}
+
+/* "Գրանցվել" (Register) — secondary grey button, full-width inside card */
+body.modern-tax-portal a#mainForm\:newRegistration,
+body.modern-tax-portal a.submit.gradientGrey,
+body.modern-tax-portal .submit.gradientGrey {
+  display: block !important;
+  width: 100% !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  padding: 11px 20px !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  margin: 0 0 18px 0 !important;
+  text-transform: none !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.modern-tax-portal a#mainForm\:newRegistration:hover,
+body.modern-tax-portal a.submit.gradientGrey:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Field labels (right column) */
+body.modern-tax-portal #middleCellTbl td[align="right"] {
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding-right: 12px !important;
+  white-space: nowrap !important;
+  width: 38% !important;
+}
+
+/* Inputs fill their cell */
+body.modern-tax-portal #middleCellTbl input[type="text"],
+body.modern-tax-portal #middleCellTbl input[type="password"] {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 9px 12px !important;
+  font-size: 14px !important;
+  min-width: 0 !important;
+}
+
+body.modern-tax-portal input[type="password"] {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  font-family: inherit !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.modern-tax-portal input[type="password"]:focus {
+  outline: none !important;
+  border-color: var(--tp, #3b82f6) !important;
+  box-shadow: 0 0 0 3px rgba(var(--tp-rgb, 37, 99, 235), 0.18) !important;
+}
+
+/* Primary submit buttons (login "Մուտք", filter "Գտնել", feedback "Ուղարկել").
+   The login-specific width: 100% is applied below via .login-tipe-button only. */
+body.modern-tax-portal input[type="submit"],
+body.modern-tax-portal input.login-tipe-button,
+body.modern-tax-portal input[type="button"]#mainForm\:sendBtn,
+body.modern-tax-portal input[type="button"][value="Ուղարկել"] {
+  background: linear-gradient(135deg, var(--tp, #2563eb) 0%, var(--tp-dark, #1d4ed8) 100%) !important;
+  color: #ffffff !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(var(--tp-rgb, 37, 99, 235), 0.3) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease !important;
+  margin: 10px 0 !important;
+  font-family: inherit !important;
+  text-transform: none !important;
+}
+
+body.modern-tax-portal input[type="submit"]:hover,
+body.modern-tax-portal input.login-tipe-button:hover,
+body.modern-tax-portal input[type="button"]#mainForm\:sendBtn:hover,
+body.modern-tax-portal input[type="button"][value="Ուղարկել"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(var(--tp-rgb, 37, 99, 235), 0.4) !important;
+  background: linear-gradient(135deg, var(--tp-dark, #1d4ed8) 0%, var(--tp-darker, #1e40af) 100%) !important;
+}
+
+body.modern-tax-portal input[type="submit"]:disabled,
+body.modern-tax-portal input.login-tipe-button:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* The login "Մուտք" button is the ONLY one that should fill its row.
+   Everything else — filter submits, feedback send, etc. — stays natural width. */
+body.modern-tax-portal input.login-tipe-button {
+  width: 100% !important;
+}
+
+body.modern-tax-portal #middleCell input[type="submit"] {
+  width: 100% !important;
+}
+
+/* mID / eID selector spans (icon + chevron) */
+body.modern-tax-portal .select-login-method {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+}
+
+body.modern-tax-portal .select-login-method .method-image {
+  width: 28px !important;
+  height: auto !important;
+  border-radius: 4px !important;
+}
+
+/* Radio buttons for MID carrier choice */
+body.modern-tax-portal input[type="radio"] {
+  accent-color: var(--tp, #2563eb) !important;
+  width: 15px !important;
+  height: 15px !important;
+  vertical-align: middle !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+}
+
+/* Carrier logos (team / VIVA / Ucom) — keep compact and aligned */
+body.modern-tax-portal img.team-image-style,
+body.modern-tax-portal img.mts-image-style,
+body.modern-tax-portal img.ucom-image-style {
+  vertical-align: middle !important;
+  max-height: 22px !important;
+  width: auto !important;
+}
+
+/* Captcha image + refresh link */
+body.modern-tax-portal #mainForm\:captchaImage {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 4px !important;
+  background: #ffffff !important;
+  display: inline-block !important;
+}
+
+body.modern-tax-portal #refreshCaptcha {
+  color: var(--tp, #2563eb) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+body.modern-tax-portal #refreshCaptcha:hover {
+  text-decoration: underline !important;
+}
+
+/* Error / message rows inside login card */
+body.modern-tax-portal #middleCellTbl td.errorMsg {
+  color: #dc2626 !important;
+  font-size: 12px !important;
+  text-align: center !important;
+}
+
+/* Footer links row (Forgot password | Help) sit under the card */
+body.modern-tax-portal #middleCell a.hoverLink {
+  color: var(--tp, #2563eb) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   Change password form (personalaccount/changePassword)
+   The source markup is a <table border="0"> inside the panel body
+   with 4-cell rows (label|input|label|input) and uneven auto-sized
+   columns — causing the left inputs to render much wider than the
+   right inputs. Scoped via :has(#mainForm:confirmPassword) so this
+   only fires on the change-password page, no DOM tagging needed.
+   ============================================================ */
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table,
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Each row becomes a 4-track grid: equal label|input columns on each
+   side so the left and right inputs line up and have the same width. */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr {
+  display: grid !important;
+  grid-template-columns: minmax(140px, 180px) minmax(0, 1fr) minmax(140px, 180px) minmax(0, 1fr) !important;
+  gap: 10px 20px !important;
+  align-items: center !important;
+  margin: 0 0 10px 0 !important;
+}
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td {
+  display: block !important;
+  padding: 4px 2px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+  background: transparent !important;
+}
+
+/* Label cells read as muted left-aligned labels */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td.noBorder:not([colspan]) {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  padding: 4px 0 !important;
+}
+
+/* colspan=2 cells (section titles + empty confirm-row left side) span 2 tracks */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td[colspan="2"] {
+  grid-column: span 2 !important;
+}
+
+/* Section header cells ("Ընթացիկ մուտքային տվյալներ" / "Նոր մուտքային տվյալներ")
+   Those tds have inline style="font-weight: bold" and are inside a row of
+   two colspan=2 headers — demote them to a soft section lead-in. */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td[colspan="2"][style*="font-weight"] {
+  color: var(--tp-darker, #1e40af) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  padding: 10px 2px 6px 2px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  margin-bottom: 4px !important;
+}
+
+/* colspan=4 cells are decorative spacer rows — hide completely */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr:has(> td[colspan="4"]:only-child) {
+  display: none !important;
+}
+
+/* Empty-left (colspan=2) sibling of the "Confirm password" cell:
+   needs to render but take no visual space (keeps grid alignment) */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td[colspan="2"]:empty {
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+/* All text + password inputs fill their grid cell */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) input[type="text"],
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) input[type="password"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+  padding: 9px 12px !important;
+  margin: 0 !important;
+}
+
+/* The source markup has <br> between input and validation span —
+   collapse them so the validation sits tight under the input */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) td.noBorder > br {
+  display: none !important;
+}
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) td.noBorder .rich-message {
+  display: block !important;
+  margin-top: 4px !important;
+  min-height: 0 !important;
+}
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) td.noBorder .rich-message:has(> .rich-message-label:empty) {
+  display: none !important;
+}
+
+/* Save button line: left-aligned CTA, no card frame */
+body.modern-tax-portal .dr-pnl.rich-panel:has(input#mainForm\:confirmPassword) + br + .button-line,
+body.modern-tax-portal #mainForm\:save_satatement {
+  margin-top: 8px !important;
+}
+
+/* ---------- Mobile: 2-track grid so each row is a single label|input ---------- */
+@media (max-width: 820px) {
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr {
+    grid-template-columns: minmax(120px, 160px) minmax(0, 1fr) !important;
+    gap: 8px 16px !important;
+  }
+
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td[colspan="2"] {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* ---------- Phone: stack label above input ---------- */
+@media (max-width: 480px) {
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr {
+    grid-template-columns: 1fr !important;
+    gap: 4px 0 !important;
+  }
+
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td.noBorder:not([colspan]) {
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+    padding: 6px 2px 0 2px !important;
+  }
+}
+
+/* ---------- Dark mode ---------- */
+body.modern-tax-portal.tax-dark .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td.noBorder:not([colspan]) {
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark .dr-pnl-b.rich-panel-body:has(input#mainForm\:confirmPassword) > table > tbody > tr > td[colspan="2"][style*="font-weight"] {
+  color: #e2e8f0 !important;
+  border-bottom-color: #1e293b !important;
+}
+

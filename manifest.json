@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "Portal Redesign",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "__MSG_extShortDesc__",
   "default_locale": "en",
   "author": "Gevorg Aghajanyan <gev.aghajanian@gmail.com>",
@@ -30,9 +30,14 @@
   "content_scripts": [
     {
       "matches": ["https://personal-account.taxservice.am/*"],
-      "css": ["content/style.css"],
+      "css": [
+        "content/base.css",
+        "content/pages.css",
+        "content/dark.css",
+        "content/responsive.css"
+      ],
       "js": ["content/content.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ],
   "commands": {

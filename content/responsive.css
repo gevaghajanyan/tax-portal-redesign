@@ -1,0 +1,302 @@
+
+/* ============================================================
+   Responsive layout — the legacy template nests fixed-width
+   label|value tables (employer, quarterly totals, bank, etc.)
+   that overflow on narrow screens. Below ~900px the sidebar +
+   main column stack; below ~700px the multi-column data rows
+   stack too so each label sits above its value.
+   ============================================================ */
+
+/* Prevent horizontal page scroll from legacy inline widths */
+body.modern-tax-portal {
+  overflow-x: hidden !important;
+}
+
+body.modern-tax-portal .dr-pnl.rich-panel {
+  max-width: 100% !important;
+}
+
+/* ---------- Tablet: stack sidebar + main ---------- */
+@media (max-width: 900px) {
+  body.modern-tax-portal #mainForm > table:nth-of-type(2) {
+    padding: 0 12px 20px 12px !important;
+  }
+
+  body.modern-tax-portal #mainForm > table:nth-of-type(2),
+  body.modern-tax-portal #mainForm > table:nth-of-type(2) > tbody,
+  body.modern-tax-portal #mainForm > table:nth-of-type(2) > tbody > tr {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  body.modern-tax-portal #mainForm > table:nth-of-type(2) > tbody > tr > td,
+  body.modern-tax-portal .tax-sidebar,
+  body.modern-tax-portal .tax-main {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.modern-tax-portal .tax-sidebar {
+    margin: 0 0 14px 0 !important;
+  }
+
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body {
+    padding: 16px !important;
+  }
+
+  body.modern-tax-portal .dr-pnl-h.rich-panel-header {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ---------- Mobile: stack multi-column label|value data rows ---------- */
+@media (max-width: 700px) {
+  /* ALL legacy label|value data tables (border="1") inside a panel body
+     collapse so every <td> becomes a full-width row. Covers:
+       - formIncomeTaxReturnApplication (bank, period — employer/quarterly
+         are handled by their own dedicated grid rules above)
+       - itrInfoAboutPaidInterests (filter + results)
+       - personalInfo (3-col name/surname/patronymic)
+       - personalaccount-changePassword (50/50 password rows)
+       - personalaccount-debts (overpayment table)
+     Skipped: .dr-table.rich-table (horizontal scroll)
+              #mainForm:employerList_body (dedicated 2-col card grid). */
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body) table[border="1"]:not(.dr-table):not(.rich-table),
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body) table[border="1"]:not(.dr-table):not(.rich-table) > tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  body.modern-tax-portal
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr {
+    display: block !important;
+    padding: 4px 6px 8px 6px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+  }
+
+  body.modern-tax-portal
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr:last-child {
+    border-bottom: none !important;
+  }
+
+  body.modern-tax-portal
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr
+    > td {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 4px 10px !important;
+    border: none !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Label cells — any td with an inline width attribute (50%, 33%, 140px,
+     15%, 25%, etc.) reads as uppercase mini-label above the value */
+  body.modern-tax-portal
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr
+    > td[width] {
+    background: transparent !important;
+    color: #475569 !important;
+    font-weight: 500 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+    padding: 8px 10px 0 10px !important;
+  }
+
+  /* Value cells (align="center") — left-align */
+  body.modern-tax-portal
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr
+    > td[align="center"] {
+    background: #ffffff !important;
+    text-align: left !important;
+    padding: 2px 10px 6px 10px !important;
+  }
+
+  /* Inputs, selects, textareas inside any panel body stretch to full width */
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body input[type="text"],
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body input[type="password"],
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body select,
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+  }
+
+  /* Keep the embedded value spans (TIN display etc.) readable */
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body td > span[id] {
+    width: auto !important;
+    display: inline-block !important;
+  }
+
+  /* The 3rd (footer) row of the quarterly table uses colspan=3 twice
+     plus a trailing calculator button */
+  body.modern-tax-portal #mainForm\:itrCalculatedRefundAmount,
+  body.modern-tax-portal #mainForm\:itrActualRefund {
+    width: 60% !important;
+  }
+
+  /* Dark mode variants for stacked label cells */
+  body.modern-tax-portal.tax-dark
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr
+    > td[width] {
+    background: transparent !important;
+    color: #94a3b8 !important;
+  }
+
+  body.modern-tax-portal.tax-dark
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr
+    > td[align="center"] {
+    background: #0b1220 !important;
+  }
+
+  body.modern-tax-portal.tax-dark
+    .dr-pnl-b.rich-panel-body:not(#mainForm\:employerList_body)
+    table[border="1"]:not(.dr-table):not(.rich-table)
+    > tbody
+    > tr {
+    border-bottom-color: #1e293b !important;
+  }
+
+  /* General containers: tighter paddings */
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body {
+    padding: 14px !important;
+  }
+
+  body.modern-tax-portal fieldset {
+    padding: 14px !important;
+  }
+
+  /* Filter row (notifications / payments) stacks too */
+  body.modern-tax-portal table[width="100%"]:has(> tbody > tr > td[width="15%"]) > tbody > tr,
+  body.modern-tax-portal table[width="100%"]:has(> tbody > tr > td[width="15%"]) > tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  body.modern-tax-portal
+    table[width="100%"]:has(> tbody > tr > td[width="15%"]) > tbody > tr > td {
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+    padding: 6px 0 !important;
+  }
+
+  /* Form-item filter rows (ԱՀ քաղվածք search) */
+  body.modern-tax-portal .form-item.clearfix {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  body.modern-tax-portal .form-item.clearfix > label {
+    min-width: 0 !important;
+  }
+
+  /* All result tables — let the whole table scroll horizontally if its
+     columns can't fit, rather than exploding the layout. Covers:
+       .dr-table.rich-table (search results, pagination tables)
+       #mainForm:doc:itrtable, #mainForm:doc:tableAcraWSLoanInfoDTOs
+       #mainForm:itrtable, #mainForm:doc:trtable
+       #mainForm:trtable, #mainForm:trtableOverPayment, #mainForm:trtable1
+     The container-level overflow lives on a wrapper, so cards keep their
+     border-radius while the inner table scrolls. */
+  body.modern-tax-portal table.dr-table.rich-table,
+  body.modern-tax-portal table[id$=":itrtable"],
+  body.modern-tax-portal table[id$=":trtable"],
+  body.modern-tax-portal table[id$=":trtableOverPayment"],
+  body.modern-tax-portal table[id$=":trtable1"],
+  body.modern-tax-portal table[id$=":tableAcraWSLoanInfoDTOs"] {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-width: 100% !important;
+  }
+
+  /* Legacy outer page chrome: 400px header title cell + 250px sidebar
+     cell both need to go full-width so nothing overflows the viewport */
+  body.modern-tax-portal td[width="400px"],
+  body.modern-tax-portal td[width="400"],
+  body.modern-tax-portal td[width="250"],
+  body.modern-tax-portal td[width="87%"] {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    display: table-cell !important;
+  }
+
+  /* Textarea on feedback — the <textarea rows="20"> should fit viewport */
+  body.modern-tax-portal #mainForm\:sendEmailPanel textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 160px !important;
+    resize: vertical !important;
+  }
+
+  /* Button lines on form pages — center and let primary CTAs span */
+  body.modern-tax-portal .button-line {
+    padding: 12px !important;
+  }
+
+  body.modern-tax-portal .button-line input[type="submit"],
+  body.modern-tax-portal .button-line a.submit {
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 4px auto !important;
+    display: block !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* ---------- Very small screens ---------- */
+@media (max-width: 420px) {
+  body.modern-tax-portal {
+    font-size: 13px !important;
+  }
+
+  body.modern-tax-portal #mainForm > table:nth-of-type(2) {
+    padding: 0 8px 16px 8px !important;
+  }
+
+  body.modern-tax-portal .dr-pnl-b.rich-panel-body {
+    padding: 10px !important;
+  }
+
+  body.modern-tax-portal .dr-pnl-h.rich-panel-header {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  body.modern-tax-portal #mainForm\:itrCalculatedRefundAmount,
+  body.modern-tax-portal #mainForm\:itrActualRefund {
+    width: 100% !important;
+  }
+}

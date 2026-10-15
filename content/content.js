@@ -18,6 +18,31 @@ const DEFAULTS = {
   fontScale: 1      // 0.9 | 1.0 | 1.1 | 1.25
 };
 
+// sessionStorage key used to carry settings across navigations within the
+// same tax-portal origin. Lets us apply the restyle synchronously at
+// document_start without waiting for chrome.storage.local (which is async
+// and causes a ~1s flash of the original design on every page change).
+const CACHE_KEY = "__tpr_settings_v1";
+
+function readCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return { ...DEFAULTS, ...parsed };
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(settings) {
+  try {
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify(settings));
+  } catch {
+    /* quota/private-mode — ignore, we'll re-read from chrome.storage next time */
+  }
+}
+
 function tagLayoutCells() {
   const subTabs = document.getElementById("subTabs");
   if (!subTabs) return false;
@@ -52,46 +77,83 @@ function resolveTheme(theme) {
     : "light";
 }
 
-function applyTheme(theme) {
-  document.body.classList.toggle("tax-dark", resolveTheme(theme) === "dark");
-}
-
 function applyFontScale(scale) {
   const s = typeof scale === "number" && isFinite(scale) ? scale : 1;
   document.documentElement.style.setProperty("--tp-scale", String(s));
 }
 
-function apply(settings) {
-  if (!document.body) return;
-  const preset = PRESETS[settings.preset] || PRESETS.blue;
-  setColors(preset);
-  applyFontScale(settings.fontScale);
+// Apply settings to whichever element exists at call time. At
+// document_start only <html> is in the DOM; body is tagged as soon as
+// it's parsed via the DOMContentLoaded listener below.
+function applyClasses(settings) {
+  const html = document.documentElement;
+  const body = document.body;
+  const dark = resolveTheme(settings.theme) === "dark";
+  const hasSidebar = !!document.querySelector(".tax-sidebar");
 
-  if (settings.enabled) {
-    document.body.classList.add("modern-tax-portal");
-    applyTheme(settings.theme);
-    if (document.querySelector(".tax-sidebar")) {
-      document.body.classList.add("tax-has-sidebar");
-      document.body.classList.remove("tax-standalone");
+  for (const el of [html, body]) {
+    if (!el) continue;
+    if (settings.enabled) {
+      el.classList.add("modern-tax-portal");
+      el.classList.toggle("tax-dark", dark);
+      el.classList.toggle("tax-has-sidebar", hasSidebar);
+      el.classList.toggle("tax-standalone", !hasSidebar);
     } else {
-      document.body.classList.add("tax-standalone");
-      document.body.classList.remove("tax-has-sidebar");
+      el.classList.remove(
+        "modern-tax-portal",
+        "tax-has-sidebar",
+        "tax-standalone",
+        "tax-dark"
+      );
     }
-  } else {
-    document.body.classList.remove(
-      "modern-tax-portal",
-      "tax-has-sidebar",
-      "tax-standalone",
-      "tax-dark"
-    );
   }
 }
 
-async function init() {
-  if (!document.body) return;
+function apply(settings) {
+  const preset = PRESETS[settings.preset] || PRESETS.blue;
+  setColors(preset);
+  applyFontScale(settings.fontScale);
+  applyClasses(settings);
+}
+
+// ---------- Synchronous first pass at document_start ----------
+// Read sessionStorage cache (populated on prior navigations) and apply
+// immediately so the restyle lands before any original pixel paints.
+// If no cache exists (first visit this tab-session), we fall back to the
+// DEFAULTS which still beats showing the raw page.
+const CACHED_SETTINGS = readCache() || DEFAULTS;
+apply(CACHED_SETTINGS);
+
+// Chrome parses HTML progressively — <body> may paint before
+// DOMContentLoaded fires. A MutationObserver on <html> tags <body> the
+// instant it's inserted, closing the FOUC window.
+if (!document.body) {
+  const htmlObserver = new MutationObserver(() => {
+    if (document.body) {
+      applyClasses(CACHED_SETTINGS);
+      htmlObserver.disconnect();
+    }
+  });
+  htmlObserver.observe(document.documentElement, { childList: true });
+}
+
+function onBodyReady() {
   tagLayoutCells();
-  const settings = await chrome.storage.local.get(DEFAULTS);
-  apply(settings);
+  const cached = readCache() || CACHED_SETTINGS;
+  apply(cached);
+
+  // Reconcile with the authoritative chrome.storage. If it differs from
+  // the cache, re-apply + update the cache for next navigation.
+  chrome.storage.local.get(DEFAULTS).then((settings) => {
+    writeCache(settings);
+    apply(settings);
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", onBodyReady, { once: true });
+} else {
+  onBodyReady();
 }
 
 // React to popup / keyboard-shortcut changes without page reload.
@@ -104,7 +166,10 @@ if (chrome?.storage?.onChanged) {
       "theme" in changes ||
       "fontScale" in changes;
     if (!relevant) return;
-    chrome.storage.local.get(DEFAULTS).then(apply);
+    chrome.storage.local.get(DEFAULTS).then((settings) => {
+      writeCache(settings);
+      apply(settings);
+    });
   });
 }
 
@@ -114,14 +179,8 @@ if (window.matchMedia) {
   mql.addEventListener?.("change", () => {
     chrome.storage.local.get(DEFAULTS).then((settings) => {
       if (settings.theme === "system" && settings.enabled) {
-        applyTheme("system");
+        applyClasses(settings);
       }
     });
   });
-}
-
-if (document.body) {
-  init();
-} else {
-  document.addEventListener("DOMContentLoaded", init, { once: true });
 }

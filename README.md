@@ -174,8 +174,6 @@ Content scripts only run on `https://personal-account.taxservice.am/*`.
 No remote code, no analytics, no network calls.
 
 Full privacy policy: see [`PRIVACY.md`](./PRIVACY.md).
-Chrome Web Store listing copy (for reference / future updates):
-see [`STORE_LISTING.md`](./STORE_LISTING.md).
 
 ---
 
