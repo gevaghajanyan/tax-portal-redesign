@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tax Portal Redesign</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="pop-header">
+      <div class="pop-brand">
+        <div class="pop-brand-dot" id="brandDot">
+          <svg
+            class="pop-brand-mark"
+            viewBox="0 0 32 32"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <rect x="7" y="10" width="15" height="3" rx="1.5" fill="#ffffff" />
+            <rect
+              x="7"
+              y="15.5"
+              width="11"
+              height="3"
+              rx="1.5"
+              fill="#ffffff"
+              fill-opacity="0.78"
+            />
+            <rect
+              x="7"
+              y="21"
+              width="13"
+              height="3"
+              rx="1.5"
+              fill="#ffffff"
+              fill-opacity="0.56"
+            />
+            <circle cx="25" cy="11.5" r="2" fill="#ffffff" />
+          </svg>
+        </div>
+        <div>
+          <h1 data-i18n="popupBrandTitle">Portal Redesign</h1>
+          <p class="pop-sub" data-i18n="popupBrandDomain">
+            personal-account.taxservice.am
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="pop-row">
+      <div class="pop-row-text">
+        <div class="pop-row-title" data-i18n="modernUI">Modern UI</div>
+        <div class="pop-row-desc" id="modeDesc" data-i18n="modernUIOn">
+          Redesigned interface is on
+        </div>
+      </div>
+      <label
+        class="pop-switch"
+        for="enabledToggle"
+        aria-label="Toggle modern UI"
+      >
+        <input type="checkbox" id="enabledToggle" />
+        <span class="pop-switch-track">
+          <span class="pop-switch-thumb"></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="pop-section pop-section--settings" id="settingsSection">
+      <!-- Appearance: Light / Dark / System -->
+      <div class="pop-field">
+        <div class="pop-field-head">
+          <span class="pop-field-title" data-i18n="appearance">Appearance</span>
+        </div>
+        <div class="pop-segment" role="tablist" id="themeSegment">
+          <button
+            type="button"
+            data-value="light"
+            data-i18n="appearanceLight"
+            role="tab"
+          >
+            Light
+          </button>
+          <button
+            type="button"
+            data-value="dark"
+            data-i18n="appearanceDark"
+            role="tab"
+          >
+            Dark
+          </button>
+          <button
+            type="button"
+            data-value="system"
+            data-i18n="appearanceSystem"
+            role="tab"
+          >
+            System
+          </button>
+          <span class="pop-segment-indicator" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <!-- Text size: A- 100% A+ -->
+      <div class="pop-field">
+        <div class="pop-field-head">
+          <span class="pop-field-title" data-i18n="fontSize">Text size</span>
+          <span class="pop-section-value" id="fontScaleLabel">100%</span>
+        </div>
+        <div class="pop-stepper" role="group">
+          <button
+            type="button"
+            id="fontScaleDown"
+            aria-label="Smaller"
+            data-i18n-title="fontSizeSmaller"
+          >
+            A−
+          </button>
+          <button
+            type="button"
+            id="fontScaleReset"
+            aria-label="Reset"
+            data-i18n-title="fontSizeReset"
+          >
+            A
+          </button>
+          <button
+            type="button"
+            id="fontScaleUp"
+            aria-label="Larger"
+            data-i18n-title="fontSizeLarger"
+          >
+            A+
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="pop-section" id="colorSection">
+      <div class="pop-section-head">
+        <span class="pop-section-title" data-i18n="primaryColor">
+          Primary color
+        </span>
+        <span class="pop-section-value" id="currentColorName">Blue</span>
+      </div>
+      <div class="pop-swatches" id="swatches"></div>
+    </section>
+
+    <footer class="pop-footer">
+      <span class="pop-saved" data-i18n="autoSave">
+        Changes save automatically
+      </span>
+      <span class="pop-version" id="shortcutHint" data-i18n="shortcutHint">
+        Alt + Shift + T
+      </span>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

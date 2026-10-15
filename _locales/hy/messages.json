@@ -1,0 +1,67 @@
+{
+  "extName": {
+    "message": "Հարկային Պորտալի Վերաձևավորում",
+    "description": "Extension name shown in the Chrome Web Store and toolbar"
+  },
+  "extShortDesc": {
+    "message": "Հայաստանի հարկային պորտալի արդիական ինտերֆեյս",
+    "description": "Short description shown in the Chrome Web Store"
+  },
+  "popupBrandTitle": {
+    "message": "Վերաձևավորում"
+  },
+  "popupBrandDomain": {
+    "message": "personal-account.taxservice.am"
+  },
+  "modernUI": {
+    "message": "Արդիական ինտերֆեյս"
+  },
+  "modernUIOn": {
+    "message": "Վերաձևավորված ինտերֆեյսը միացված է"
+  },
+  "modernUIOff": {
+    "message": "Ցուցադրվում է բնօրինակ դիզայնը"
+  },
+  "primaryColor": {
+    "message": "Հիմնական գույն"
+  },
+  "appearance": {
+    "message": "Տեսք"
+  },
+  "appearanceLight": {
+    "message": "Լուսավոր"
+  },
+  "appearanceDark": {
+    "message": "Մուգ"
+  },
+  "appearanceSystem": {
+    "message": "Համակարգ"
+  },
+  "fontSize": {
+    "message": "Տեքստի չափ"
+  },
+  "fontSizeSmaller": {
+    "message": "Փոքր"
+  },
+  "fontSizeLarger": {
+    "message": "Մեծ"
+  },
+  "fontSizeReset": {
+    "message": "Վերականգնել"
+  },
+  "shortcutHint": {
+    "message": "Դյուրանցում՝ Alt + Shift + T"
+  },
+  "autoSave": {
+    "message": "Փոփոխությունները պահպանվում են ինքնաշխատ"
+  },
+  "colorBlue": { "message": "Կապույտ" },
+  "colorIndigo": { "message": "Ինդիգո" },
+  "colorPurple": { "message": "Մանուշակագույն" },
+  "colorPink": { "message": "Վարդագույն" },
+  "colorRed": { "message": "Կարմիր" },
+  "colorOrange": { "message": "Նարնջագույն" },
+  "colorGreen": { "message": "Կանաչ" },
+  "colorTeal": { "message": "Փիրուզագույն" },
+  "colorSlate": { "message": "Մոխրագույն" }
+}

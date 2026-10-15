@@ -1,0 +1,1420 @@
+/* ============================================================
+   Tax Portal Redesign — all rules scoped to body.modern-tax-portal
+   Strategy:
+   1. Reset ALL tables so layout tables become transparent (the old
+      page uses deeply nested <table> for layout; styling every table
+      as a card produced cards-inside-cards).
+   2. Re-style only real content containers: .dr-pnl panels,
+      fieldsets, data tables ([border="1"] + fieldset tables),
+      inputs/selects/buttons, modals, calendar.
+   3. Primary color is themed via CSS custom properties set from JS
+      based on the user's selection in the extension popup. The
+      fallbacks here are the "Blue" preset so the stylesheet still
+      works even before JS has run.
+   ============================================================ */
+
+:root {
+  --tp: #2563eb;
+  --tp-rgb: 37, 99, 235;
+  --tp-dark: #1d4ed8;
+  --tp-darker: #1e40af;
+  --tp-tint: #eff6ff;
+  --tp-scale: 1;
+}
+
+/* ---------- Font-size scale (user-adjustable from popup) ---------- */
+body.modern-tax-portal {
+  zoom: var(--tp-scale, 1);
+}
+
+/* ---------- Base ---------- */
+body.modern-tax-portal {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans Armenian", "DejaVu Sans", Arial, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Strip default layout-table decoration so nested tables don't look like cards */
+body.modern-tax-portal table {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.modern-tax-portal td,
+body.modern-tax-portal th {
+  padding: 2px 4px !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Hide decorative spacers and shadow-strip images from the old template */
+body.modern-tax-portal img[src*="spacer.gif"],
+body.modern-tax-portal img[src*="shd_01"],
+body.modern-tax-portal img[src*="shd_left"],
+body.modern-tax-portal img[src*="shd_right"],
+body.modern-tax-portal img[src*="shd04"] {
+  display: none !important;
+}
+
+/* ---------- Top header bar (minimal, ~44px tall) ---------- */
+body.modern-tax-portal table.gradient {
+  background: linear-gradient(135deg, #0f172a 0%, var(--tp-darker, #1e40af) 60%, var(--tp, #2563eb) 100%) !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12) !important;
+  margin: 0 0 14px 0 !important;
+}
+
+/* Collapse the inline 90px tall row + any auxiliary rows */
+body.modern-tax-portal table.gradient tr[style*="height:90px"],
+body.modern-tax-portal table.gradient tr {
+  height: auto !important;
+}
+
+body.modern-tax-portal table.gradient td {
+  padding: 6px 12px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+/* Portal title link */
+body.modern-tax-portal table.gradient td[style*="font-size:18px"] a,
+body.modern-tax-portal table.gradient a[href*="loginPage"] {
+  font-size: 13px !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  letter-spacing: 0.3px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+}
+
+/* Subtitle: "Հայաստանի / Հանրապետության / Հարկային Ծառայություն".
+   The nested <table> uses 3 stacked rows. Flatten rows to inline so it
+   collapses onto one tight line next to the logo. */
+body.modern-tax-portal table.gradient table {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  gap: 6px !important;
+  align-items: center !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+body.modern-tax-portal table.gradient table tbody {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+
+body.modern-tax-portal table.gradient table tr {
+  display: inline !important;
+}
+
+body.modern-tax-portal table.gradient table td {
+  display: inline !important;
+  font-size: 10px !important;
+  padding: 0 !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  letter-spacing: 0.2px !important;
+  white-space: nowrap !important;
+  text-transform: uppercase !important;
+}
+
+/* Logo — small white rounded tile so the original tax service logo
+   reads against the dark gradient bar. */
+body.modern-tax-portal table.gradient img[src*="tax_service_logo"] {
+  filter: none !important;
+  height: 28px !important;
+  width: auto !important;
+  padding: 3px !important;
+  background: #ffffff !important;
+  border-radius: 6px !important;
+  box-sizing: content-box !important;
+  display: block !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Column padding adjustments */
+body.modern-tax-portal table.gradient td[width="50px"] {
+  width: 20px !important;
+  min-width: 20px !important;
+  padding: 0 !important;
+}
+
+body.modern-tax-portal table.gradient td[width="10px"] {
+  width: 6px !important;
+  padding: 0 !important;
+}
+
+body.modern-tax-portal table.gradient td[width="90px"] {
+  width: auto !important;
+  padding: 4px 12px 4px 6px !important;
+}
+
+/* ---------- Main page layout container (full width) ---------- */
+body.modern-tax-portal #mainForm > table:nth-of-type(2) {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 20px 24px 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* ---------- Sidebar navigation (tabs) ---------- */
+body.modern-tax-portal ul.profile-tabs {
+  background: #ffffff !important;
+  padding: 10px !important;
+  border-radius: 14px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+  margin: 0 0 20px 0 !important;
+  list-style: none !important;
+}
+
+body.modern-tax-portal .profile-tabs li {
+  display: block !important;
+  margin: 2px 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+body.modern-tax-portal .profile-tabs li .tabSpan {
+  display: block !important;
+}
+
+body.modern-tax-portal .profile-tabs li a {
+  display: block !important;
+  padding: 10px 14px !important;
+  color: #475569 !important;
+  text-decoration: none !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+
+body.modern-tax-portal .profile-tabs li a:hover {
+  background: #f1f5f9 !important;
+  color: var(--tp-dark, #1d4ed8) !important;
+}
+
+body.modern-tax-portal .profile-tabs li.tabsel {
+  background: var(--tp-tint, #eff6ff) !important;
+}
+
+body.modern-tax-portal .profile-tabs li.tabsel a {
+  background: var(--tp-tint, #eff6ff) !important;
+  color: var(--tp-dark, #1d4ed8) !important;
+  font-weight: 600 !important;
+}
+
+/* User name block in sidebar */
+body.modern-tax-portal #subTabs ~ table .auxLabel {
+  color: #0f172a !important;
+  font-size: 15px !important;
+}
+
+/* Sidebar action links (Settings | Help | Exit) */
+body.modern-tax-portal a.hoverLink {
+  color: var(--tp, #2563eb) !important;
+  text-decoration: none !important;
+  font-size: 13px !important;
+}
+
+body.modern-tax-portal a.hoverLink:hover {
+  text-decoration: underline !important;
+}
+
+/* "Ծանուցումներ" header on sidebar */
+body.modern-tax-portal td.gradient[align="center"] {
+  background: var(--tp-tint, #eff6ff) !important;
+  color: var(--tp-darker, #1e40af) !important;
+  padding: 10px 12px !important;
+  border-radius: 8px 8px 0 0 !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+}
+
+body.modern-tax-portal td.gradient .ff_txt,
+body.modern-tax-portal .ff_txt {
+  color: var(--tp-darker, #1e40af) !important;
+  font-weight: 600 !important;
+}
+
+/* ---------- Main content panel ---------- */
+body.modern-tax-portal .dr-pnl.rich-panel {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+  overflow: hidden !important;
+  margin: 0 0 20px 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+
+body.modern-tax-portal .dr-pnl-h.rich-panel-header {
+  background: linear-gradient(135deg, var(--tp-darker, #1e3a8a) 0%, var(--tp, #2563eb) 100%) !important;
+  color: #ffffff !important;
+  padding: 16px 24px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  border: none !important;
+}
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body {
+  background: #ffffff !important;
+  padding: 24px !important;
+  border: none !important;
+}
+
+/* Nested employer panel inside the main panel */
+body.modern-tax-portal .dr-pnl.rich-panel .dr-pnl.rich-panel {
+  box-shadow: none !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  margin: 0 0 14px 0 !important;
+}
+
+body.modern-tax-portal .dr-pnl.rich-panel .dr-pnl-b.rich-panel-body {
+  padding: 14px !important;
+}
+
+/* Officialese block ("Հավելված N 2 / Հայաստանի Հանրապետության ...") — demote visually */
+body.modern-tax-portal #formContentContainer > table {
+  color: #64748b !important;
+  font-size: 12px !important;
+  margin-bottom: 6px !important;
+}
+
+body.modern-tax-portal #formContentContainer > table td {
+  padding: 2px 4px !important;
+}
+
+/* ---------- Fieldsets become grouped sections ---------- */
+body.modern-tax-portal fieldset {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin: 0 0 20px 0 !important;
+  background: #f8fafc !important;
+}
+
+body.modern-tax-portal fieldset legend {
+  padding: 0 8px !important;
+  color: var(--tp-darker, #1e40af) !important;
+  font-weight: 600 !important;
+}
+
+/* ---------- Data tables (border="1" OR inside fieldset) ---------- */
+body.modern-tax-portal fieldset table,
+body.modern-tax-portal table[border="1"] {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  margin: 0 0 12px 0 !important;
+  width: 100% !important;
+}
+
+body.modern-tax-portal fieldset table td,
+body.modern-tax-portal table[border="1"] td {
+  padding: 12px 14px !important;
+  border: none !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  vertical-align: middle !important;
+  font-size: 13px !important;
+  color: #0f172a !important;
+}
+
+body.modern-tax-portal fieldset table tr:last-child td,
+body.modern-tax-portal table[border="1"] tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Left label column styling for 2-column label|value tables.
+   DO NOT force a width — many data tables use multi-column
+   label|value|label|value layouts with their own inline widths. */
+body.modern-tax-portal fieldset table td:first-child,
+body.modern-tax-portal table[border="1"] td:first-child {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  background: #fafbfc !important;
+}
+
+/* Label cells identified by inline HTML width attribute
+   (employer / quarterly / bank tables use width="140px"/"160px"/"30%") */
+body.modern-tax-portal #mainForm\:employerList table td[width],
+body.modern-tax-portal #mainForm\:financialInfo table td[width],
+body.modern-tax-portal #mainForm\:bankBlock table td[width] {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  background: #fafbfc !important;
+}
+
+/* Value cells (align="center" inside these multi-col data tables)
+   get white background so they stand out from the grey label cells */
+body.modern-tax-portal #mainForm\:employerList table td[align="center"],
+body.modern-tax-portal #mainForm\:financialInfo table td[align="center"] {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* The multi-column data tables need their inline widths honored
+   so the layout doesn't collapse */
+body.modern-tax-portal #mainForm\:employerList table,
+body.modern-tax-portal #mainForm\:financialInfo table {
+  table-layout: auto !important;
+}
+
+/* Readonly value inputs inside the data tables look like data displays,
+   not disabled form fields */
+body.modern-tax-portal #mainForm\:employerList input[type="text"][readonly],
+body.modern-tax-portal #mainForm\:financialInfo input[type="text"][readonly],
+body.modern-tax-portal #mainForm\:bankBlock input[type="text"][readonly] {
+  background: transparent !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  font-weight: 500 !important;
+  padding: 6px 8px !important;
+}
+
+/* The small inline readonly inputs (quarterly / calculated / actual refund)
+   also need to clearly show their numeric value */
+body.modern-tax-portal #mainForm\:quarterlyTotalPaidAmount,
+body.modern-tax-portal #mainForm\:inputReturnAmount,
+body.modern-tax-portal #mainForm\:mortgageLoanPaidTotal,
+body.modern-tax-portal #mainForm\:itrCalculatedRefundAmount,
+body.modern-tax-portal #mainForm\:itrActualRefund {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+  text-align: right !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Highlighted title (ԴԻՄՈՒՄ) inside first data table */
+body.modern-tax-portal .higlighted {
+  color: var(--tp-darker, #1e40af) !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Period selection table uses colspans — reset first-child styling for it */
+body.modern-tax-portal #mainForm\:periodBlock table td,
+body.modern-tax-portal #mainForm\:periodBlock table td:first-child {
+  background: transparent !important;
+  color: #0f172a !important;
+  font-weight: 400 !important;
+  width: auto !important;
+  padding: 10px 6px !important;
+  line-height: 2.2 !important;
+}
+
+/* ---------- Form inputs ---------- */
+body.modern-tax-portal input[type="text"] {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 7px 10px !important;
+  font-size: 13px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+  box-sizing: border-box !important;
+  font-family: inherit !important;
+}
+
+body.modern-tax-portal input[type="text"]:focus {
+  outline: none !important;
+  border-color: var(--tp, #3b82f6) !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(var(--tp-rgb, 37, 99, 235), 0.18) !important;
+}
+
+/* Readonly inputs are data displays on these pages (employer name, bank name,
+   amounts, dates) — keep the text dark/readable, not muted. */
+body.modern-tax-portal input[type="text"][readonly] {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  border-style: solid !important;
+  cursor: default !important;
+  font-weight: 500 !important;
+}
+
+body.modern-tax-portal input[type="text"][readonly]:focus {
+  box-shadow: none !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal input[type="password"] {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 7px 10px !important;
+  font-size: 13px !important;
+  background: #ffffff !important;
+}
+
+body.modern-tax-portal select {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 7px 32px 7px 10px !important;
+  font-size: 13px !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748b'><path fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 16px !important;
+  font-family: inherit !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.modern-tax-portal select:focus {
+  outline: none !important;
+  border-color: var(--tp, #3b82f6) !important;
+  box-shadow: 0 0 0 3px rgba(var(--tp-rgb, 37, 99, 235), 0.18) !important;
+}
+
+body.modern-tax-portal input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  accent-color: var(--tp, #2563eb) !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  margin: 0 6px 0 0 !important;
+}
+
+/* ---------- Calendar input + popup ---------- */
+body.modern-tax-portal input.rich-calendar-input {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px 0 0 6px !important;
+  padding: 7px 10px !important;
+  font-size: 13px !important;
+  background: #ffffff !important;
+}
+
+body.modern-tax-portal img.rich-calendar-button {
+  border: 1px solid #cbd5e1 !important;
+  border-left: none !important;
+  border-radius: 0 6px 6px 0 !important;
+  padding: 6px !important;
+  background: #f8fafc !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+}
+
+body.modern-tax-portal .rich-calendar-popup,
+body.modern-tax-portal .rich-calendar-exterior {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.15) !important;
+  overflow: hidden !important;
+}
+
+body.modern-tax-portal .rich-calendar-header {
+  background: linear-gradient(135deg, var(--tp-darker, #1e40af) 0%, var(--tp, #2563eb) 100%) !important;
+  color: #ffffff !important;
+  padding: 10px !important;
+}
+
+body.modern-tax-portal .rich-calendar-days,
+body.modern-tax-portal .rich-calendar-week {
+  color: #64748b !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+body.modern-tax-portal .rich-calendar-cell {
+  color: #0f172a !important;
+  font-size: 12px !important;
+}
+
+body.modern-tax-portal .rich-calendar-cell:hover {
+  background: var(--tp-tint, #eff6ff) !important;
+  cursor: pointer !important;
+}
+
+/* ---------- Submit button + action row ---------- */
+body.modern-tax-portal .button-line {
+  text-align: center !important;
+  margin: 24px 0 8px 0 !important;
+  padding: 20px !important;
+  background: #f8fafc !important;
+  border-radius: 10px !important;
+}
+
+/* Primary blue CTA — applies to any .submit (plain or .submit.gradient).
+   Login page's .submit.gradientGrey overrides via higher specificity later. */
+body.modern-tax-portal a.submit,
+body.modern-tax-portal .submit {
+  background: linear-gradient(135deg, var(--tp, #2563eb) 0%, var(--tp-dark, #1d4ed8) 100%) !important;
+  color: #ffffff !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(var(--tp-rgb, 37, 99, 235), 0.3) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+  cursor: pointer !important;
+  letter-spacing: 0.3px !important;
+  text-transform: none !important;
+  font-family: inherit !important;
+}
+
+body.modern-tax-portal a.submit:hover,
+body.modern-tax-portal .submit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(var(--tp-rgb, 37, 99, 235), 0.4) !important;
+  background: linear-gradient(135deg, var(--tp-dark, #1d4ed8) 0%, var(--tp-darker, #1e40af) 100%) !important;
+  color: #ffffff !important;
+}
+
+body.modern-tax-portal a.submit:active,
+body.modern-tax-portal .submit:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(var(--tp-rgb, 37, 99, 235), 0.3) !important;
+}
+
+/* The big form-submit on the application form keeps larger padding */
+body.modern-tax-portal a.submit.gradient,
+body.modern-tax-portal .submit.gradient {
+  padding: 12px 32px !important;
+  font-size: 14px !important;
+}
+
+/* Secondary styled links (e.g. "Ելք" / back) */
+body.modern-tax-portal a.linkAsButton {
+  background: #ffffff !important;
+  color: #334155 !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  margin-left: 8px !important;
+  transition: all 0.15s ease !important;
+}
+
+body.modern-tax-portal a.linkAsButton:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+/* ---------- Error / validation messages ---------- */
+body.modern-tax-portal .rich-message .rich-message-label {
+  color: #dc2626 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding-left: 4px !important;
+}
+
+body.modern-tax-portal .rich-message.errorMsg {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  margin-top: 4px !important;
+}
+
+body.modern-tax-portal span[style*="color:red"],
+body.modern-tax-portal span[style*="color: red"] {
+  color: #dc2626 !important;
+  font-weight: 500 !important;
+}
+
+/* ---------- Modal panels (notifications) ---------- */
+body.modern-tax-portal .rich-modalpanel .rich-mp-content {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25) !important;
+}
+
+body.modern-tax-portal .rich-modalpanel .rich-mpnl-header-cell {
+  background: linear-gradient(135deg, var(--tp-darker, #1e3a8a) 0%, var(--tp, #2563eb) 100%) !important;
+  padding: 0 !important;
+}
+
+body.modern-tax-portal .rich-modalpanel .rich-mpnl-header {
+  color: #ffffff !important;
+  padding: 14px 20px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.3px !important;
+}
+
+body.modern-tax-portal .rich-modalpanel .rich-mpnl-body {
+  padding: 20px !important;
+  background: #ffffff !important;
+  color: #334155 !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+body.modern-tax-portal .rich-modalpanel .rich-mpnl-body table {
+  background: transparent !important;
+  border: none !important;
+}
+
+body.modern-tax-portal .rich-modalpanel .rich-mpnl-body td {
+  padding: 6px 8px !important;
+  background: transparent !important;
+}
+
+body.modern-tax-portal .rich-modalpanel .rich-mpnl-controls {
+  position: absolute !important;
+  top: 10px !important;
+  right: 12px !important;
+}
+
+body.modern-tax-portal .rich-mpnl-shadow {
+  display: none !important;
+}
+
+/* ---------- Wait / loader panel ----------
+   The JSF ModalPanel initializes with {width:100,height:50} and the inner
+   <table> gets inline style="width:100px;height:50px". Override both so
+   the "Խնդրում ենք սպասել..." text fits and the spinner is readable. */
+body.modern-tax-portal #waitPanelContentDiv {
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25) !important;
+  padding: 28px 40px !important;
+  min-width: 240px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+body.modern-tax-portal #waitPanelContentTable {
+  width: 100% !important;
+  height: auto !important;
+  min-width: 180px !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+body.modern-tax-portal #waitPanelContentTable table {
+  width: 100% !important;
+  height: auto !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+body.modern-tax-portal #waitPanelContentTable td {
+  padding: 8px 12px !important;
+  color: #0f172a !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  background: transparent !important;
+}
+
+/* The AJAX spinner gif — scale it up so it reads as a real loader */
+body.modern-tax-portal #waitPanel img[src*="ajax-loader"],
+body.modern-tax-portal #waitPanelContentDiv img[src*="ajax-loader"] {
+  width: 36px !important;
+  height: 36px !important;
+  display: inline-block !important;
+  margin: 4px auto 0 auto !important;
+  border: none !important;
+}
+
+/* Resize the modal's auto-positioned container so it isn't clipped
+   to the original 100x50 hint */
+body.modern-tax-portal #waitPanelContainer .rich-mp-container {
+  min-width: 240px !important;
+  min-height: auto !important;
+}
+
+/* ---------- Footer ---------- */
+body.modern-tax-portal .auxLabel[align="right"],
+body.modern-tax-portal td.auxLabel {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+}
+
+/* Collapse the ugly 5px blue divider rows from the template */
+body.modern-tax-portal tr[bgcolor="#8daddc"] td {
+  background: transparent !important;
+  padding: 0 !important;
+  height: 0 !important;
+}
+
+/* ---------- Help & utility icons ---------- */
+body.modern-tax-portal img[src*="help.gif"] {
+  opacity: 0.65 !important;
+  vertical-align: middle !important;
+  transition: opacity 0.15s ease !important;
+}
+
+body.modern-tax-portal img[src*="help.gif"]:hover {
+  opacity: 1 !important;
+}
+
+body.modern-tax-portal img[src*="icon-warning"],
+body.modern-tax-portal img[src*="icon-info"],
+body.modern-tax-portal img[src*="icon-error"] {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+/* ---------- Separators ---------- */
+body.modern-tax-portal .rich-separator {
+  background: #e2e8f0 !important;
+  height: 1px !important;
+  margin: 12px 0 !important;
+}
+
+/* ---------- Data tables (.rich-table — application list / search results) ---------- */
+body.modern-tax-portal table.dr-table.rich-table {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  margin: 12px 0 !important;
+  width: 100% !important;
+}
+
+body.modern-tax-portal .dr-table-subheader,
+body.modern-tax-portal tr.rich-table-subheader {
+  background: #f8fafc !important;
+}
+
+body.modern-tax-portal th.dr-table-subheadercell,
+body.modern-tax-portal th.rich-table-subheadercell {
+  background: #f8fafc !important;
+  color: #334155 !important;
+  padding: 12px 10px !important;
+  border: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+}
+
+body.modern-tax-portal th.dr-table-subheadercell .capit,
+body.modern-tax-portal th.rich-table-subheadercell .capit {
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  text-transform: uppercase !important;
+}
+
+body.modern-tax-portal td.dr-table-footercell,
+body.modern-tax-portal td.rich-table-footercell {
+  background: #ffffff !important;
+  border: none !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 10px !important;
+}
+
+/* The "Որոնում" (Search) form uses .noBorder cells and inline <label>s */
+body.modern-tax-portal td.noBorder {
+  background: transparent !important;
+  border: none !important;
+  padding: 8px 10px !important;
+  color: #0f172a !important;
+  font-size: 13px !important;
+  vertical-align: middle !important;
+}
+
+body.modern-tax-portal td.noBorder label {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+/* Date-range separator between two calendars ("date - date") */
+body.modern-tax-portal .lines {
+  color: #94a3b8 !important;
+  padding: 0 6px !important;
+  font-weight: 500 !important;
+}
+
+/* "Create new application" link sits on its own row, right-aligned */
+body.modern-tax-portal #mainForm\:doc\:idFormIncomeTaxReturnApplication {
+  margin: 4px 0 12px 0 !important;
+}
+
+/* Search action row ("Գտնել" button right-aligned under the search panel) */
+body.modern-tax-portal .button-line[align="right"] {
+  text-align: right !important;
+  background: transparent !important;
+  padding: 8px 0 !important;
+  margin: 0 !important;
+}
+
+/* The Search submit button is input[type=submit].submit — keep it compact */
+body.modern-tax-portal input[type="submit"].submit {
+  width: auto !important;
+  padding: 10px 24px !important;
+  margin: 0 !important;
+}
+
+/* ============================================================
+   Sidebar / Main-content layout (always open)
+   JS tags the two layout <td>s with .tax-sidebar and .tax-main.
+   ============================================================ */
+
+body.modern-tax-portal .tax-sidebar {
+  width: 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  padding: 0 16px 0 0 !important;
+  box-sizing: border-box !important;
+  vertical-align: top !important;
+}
+
+body.modern-tax-portal .tax-main {
+  width: auto !important;
+  vertical-align: top !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================================
+   Login page (and any standalone centered-form page)
+   Detected by #middleCell / #middleCellTbl in the DOM.
+   ============================================================ */
+
+/* Defensive: if a stale toggle button lingers in the DOM, hide it */
+body.modern-tax-portal button.tax-sidebar-toggle,
+body.modern-tax-portal .tax-sidebar-toggle {
+  display: none !important;
+}
+
+/* Center the login row vertically within the viewport */
+body.modern-tax-portal tr#middleCell > td {
+  vertical-align: middle !important;
+  padding: 32px 16px !important;
+  text-align: center !important;
+}
+
+/* The login card — centered, modern, overrides inline width:400px + #eeeeee bg */
+body.modern-tax-portal #middleCell .dr-pnl.rich-panel {
+  width: 100% !important;
+  max-width: 440px !important;
+  margin: 0 auto !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.08),
+    0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  overflow: hidden !important;
+  text-align: left !important;
+  display: inline-block !important;
+}
+
+body.modern-tax-portal #middleCell .dr-pnl-b.rich-panel-body {
+  padding: 32px 28px 24px 28px !important;
+  background: #ffffff !important;
+}
+
+/* Flatten every nested table inside the card: full width, no backgrounds */
+body.modern-tax-portal #middleCellTbl,
+body.modern-tax-portal #middleCellTbl table {
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  border-spacing: 0 !important;
+  border-collapse: collapse !important;
+  max-width: 100% !important;
+}
+
+body.modern-tax-portal #middleCellTbl td {
+  background: transparent !important;
+  border: none !important;
+  padding: 5px 4px !important;
+  vertical-align: middle !important;
+}
+
+/* Intro paragraph (Դուք դեռևս չունե՞ք ...) */
+body.modern-tax-portal #middleCellTbl > tbody > tr:first-child > td[colspan="2"] {
+  color: #475569 !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  padding: 0 0 14px 0 !important;
+  text-align: center !important;
+}
+
+/* "Գրանցվել" (Register) — secondary grey button, full-width inside card */
+body.modern-tax-portal a#mainForm\:newRegistration,
+body.modern-tax-portal a.submit.gradientGrey,
+body.modern-tax-portal .submit.gradientGrey {
+  display: block !important;
+  width: 100% !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  padding: 11px 20px !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  margin: 0 0 18px 0 !important;
+  text-transform: none !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.modern-tax-portal a#mainForm\:newRegistration:hover,
+body.modern-tax-portal a.submit.gradientGrey:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Field labels (right column) */
+body.modern-tax-portal #middleCellTbl td[align="right"] {
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding-right: 12px !important;
+  white-space: nowrap !important;
+  width: 38% !important;
+}
+
+/* Inputs fill their cell */
+body.modern-tax-portal #middleCellTbl input[type="text"],
+body.modern-tax-portal #middleCellTbl input[type="password"] {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 9px 12px !important;
+  font-size: 14px !important;
+  min-width: 0 !important;
+}
+
+body.modern-tax-portal input[type="password"] {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  font-family: inherit !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.modern-tax-portal input[type="password"]:focus {
+  outline: none !important;
+  border-color: var(--tp, #3b82f6) !important;
+  box-shadow: 0 0 0 3px rgba(var(--tp-rgb, 37, 99, 235), 0.18) !important;
+}
+
+/* Primary "Մուտք" login button */
+body.modern-tax-portal input[type="submit"],
+body.modern-tax-portal input.login-tipe-button {
+  width: 100% !important;
+  background: linear-gradient(135deg, var(--tp, #2563eb) 0%, var(--tp-dark, #1d4ed8) 100%) !important;
+  color: #ffffff !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(var(--tp-rgb, 37, 99, 235), 0.3) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease !important;
+  margin: 10px 0 !important;
+  font-family: inherit !important;
+  text-transform: none !important;
+}
+
+body.modern-tax-portal input[type="submit"]:hover,
+body.modern-tax-portal input.login-tipe-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(var(--tp-rgb, 37, 99, 235), 0.4) !important;
+  background: linear-gradient(135deg, var(--tp-dark, #1d4ed8) 0%, var(--tp-darker, #1e40af) 100%) !important;
+}
+
+body.modern-tax-portal input[type="submit"]:disabled,
+body.modern-tax-portal input.login-tipe-button:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* mID / eID selector spans (icon + chevron) */
+body.modern-tax-portal .select-login-method {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+}
+
+body.modern-tax-portal .select-login-method .method-image {
+  width: 28px !important;
+  height: auto !important;
+  border-radius: 4px !important;
+}
+
+/* Radio buttons for MID carrier choice */
+body.modern-tax-portal input[type="radio"] {
+  accent-color: var(--tp, #2563eb) !important;
+  width: 15px !important;
+  height: 15px !important;
+  vertical-align: middle !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+}
+
+/* Carrier logos (team / VIVA / Ucom) — keep compact and aligned */
+body.modern-tax-portal img.team-image-style,
+body.modern-tax-portal img.mts-image-style,
+body.modern-tax-portal img.ucom-image-style {
+  vertical-align: middle !important;
+  max-height: 22px !important;
+  width: auto !important;
+}
+
+/* Captcha image + refresh link */
+body.modern-tax-portal #mainForm\:captchaImage {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 4px !important;
+  background: #ffffff !important;
+  display: inline-block !important;
+}
+
+body.modern-tax-portal #refreshCaptcha {
+  color: var(--tp, #2563eb) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+body.modern-tax-portal #refreshCaptcha:hover {
+  text-decoration: underline !important;
+}
+
+/* Error / message rows inside login card */
+body.modern-tax-portal #middleCellTbl td.errorMsg {
+  color: #dc2626 !important;
+  font-size: 12px !important;
+  text-align: center !important;
+}
+
+/* Footer links row (Forgot password | Help) sit under the card */
+body.modern-tax-portal #middleCell a.hoverLink {
+  color: var(--tp, #2563eb) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   Dark mode — activated by body.tax-dark (set from content.js
+   based on user's "theme" setting: light / dark / system).
+   Overrides target the biggest surfaces (page bg, cards, inputs,
+   data tables, modals) without rewriting every rule.
+   ============================================================ */
+
+body.modern-tax-portal.tax-dark {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Sidebar */
+body.modern-tax-portal.tax-dark ul.profile-tabs {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li a {
+  color: #cbd5e1 !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li a:hover {
+  background: #1e293b !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li.tabsel {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.15) !important;
+}
+
+body.modern-tax-portal.tax-dark .profile-tabs li.tabsel a {
+  background: transparent !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+body.modern-tax-portal.tax-dark #subTabs ~ table .auxLabel {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark a.hoverLink {
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Notifications sidebar header */
+body.modern-tax-portal.tax-dark td.gradient[align="center"] {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.12) !important;
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Main content card */
+body.modern-tax-portal.tax-dark .dr-pnl.rich-panel {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.modern-tax-portal.tax-dark .dr-pnl-b.rich-panel-body {
+  background: #111827 !important;
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark .dr-pnl.rich-panel .dr-pnl.rich-panel {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+/* Fieldsets become darker grouped sections */
+body.modern-tax-portal.tax-dark fieldset {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Data tables inside dark cards */
+body.modern-tax-portal.tax-dark fieldset table,
+body.modern-tax-portal.tax-dark table[border="1"] {
+  background: #0b1220 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark fieldset table td,
+body.modern-tax-portal.tax-dark table[border="1"] td {
+  color: #e2e8f0 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark fieldset table td:first-child,
+body.modern-tax-portal.tax-dark table[border="1"] td:first-child {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList table td[width],
+body.modern-tax-portal.tax-dark #mainForm\:financialInfo table td[width],
+body.modern-tax-portal.tax-dark #mainForm\:bankBlock table td[width] {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:employerList table td[align="center"],
+body.modern-tax-portal.tax-dark #mainForm\:financialInfo table td[align="center"] {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Officialese block in dark */
+body.modern-tax-portal.tax-dark #formContentContainer > table,
+body.modern-tax-portal.tax-dark #formContentContainer > table td {
+  color: #64748b !important;
+}
+
+body.modern-tax-portal.tax-dark .higlighted {
+  color: var(--tp, #2563eb) !important;
+}
+
+/* Form inputs */
+body.modern-tax-portal.tax-dark input[type="text"],
+body.modern-tax-portal.tax-dark input[type="password"],
+body.modern-tax-portal.tax-dark select {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+body.modern-tax-portal.tax-dark input[type="text"][readonly],
+body.modern-tax-portal.tax-dark #mainForm\:employerList input[type="text"][readonly],
+body.modern-tax-portal.tax-dark #mainForm\:financialInfo input[type="text"][readonly],
+body.modern-tax-portal.tax-dark #mainForm\:bankBlock input[type="text"][readonly] {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark #mainForm\:quarterlyTotalPaidAmount,
+body.modern-tax-portal.tax-dark #mainForm\:inputReturnAmount,
+body.modern-tax-portal.tax-dark #mainForm\:mortgageLoanPaidTotal,
+body.modern-tax-portal.tax-dark #mainForm\:itrCalculatedRefundAmount,
+body.modern-tax-portal.tax-dark #mainForm\:itrActualRefund {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark input.rich-calendar-input {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+body.modern-tax-portal.tax-dark img.rich-calendar-button {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+/* Calendar popup */
+body.modern-tax-portal.tax-dark .rich-calendar-popup,
+body.modern-tax-portal.tax-dark .rich-calendar-exterior {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark .rich-calendar-cell {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark .rich-calendar-cell:hover {
+  background: rgba(var(--tp-rgb, 37, 99, 235), 0.2) !important;
+}
+
+/* Action area / button line */
+body.modern-tax-portal.tax-dark .button-line {
+  background: #0f172a !important;
+}
+
+/* Modal panels */
+body.modern-tax-portal.tax-dark .rich-modalpanel .rich-mp-content {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark .rich-modalpanel .rich-mpnl-body {
+  background: #111827 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Wait panel */
+body.modern-tax-portal.tax-dark #waitPanelContentDiv {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark #waitPanelContentTable td {
+  color: #e2e8f0 !important;
+}
+
+/* Table footer / search results in dark */
+body.modern-tax-portal.tax-dark table.dr-table.rich-table {
+  background: #0b1220 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark th.dr-table-subheadercell,
+body.modern-tax-portal.tax-dark th.rich-table-subheadercell {
+  background: #111827 !important;
+  color: #cbd5e1 !important;
+  border-color: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark .capit {
+  color: #94a3b8 !important;
+}
+
+/* Secondary button on login */
+body.modern-tax-portal.tax-dark a#mainForm\:newRegistration,
+body.modern-tax-portal.tax-dark a.submit.gradientGrey,
+body.modern-tax-portal.tax-dark .submit.gradientGrey {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+body.modern-tax-portal.tax-dark a#mainForm\:newRegistration:hover,
+body.modern-tax-portal.tax-dark a.submit.gradientGrey:hover {
+  background: #334155 !important;
+}
+
+/* Login card */
+body.modern-tax-portal.tax-dark #middleCell .dr-pnl.rich-panel {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCell .dr-pnl-b.rich-panel-body {
+  background: #111827 !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCellTbl td {
+  color: #e2e8f0 !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCellTbl > tbody > tr:first-child > td[colspan="2"] {
+  color: #94a3b8 !important;
+}
+
+body.modern-tax-portal.tax-dark #middleCellTbl td[align="right"] {
+  color: #94a3b8 !important;
+}
+
+/* Separators / dividers */
+body.modern-tax-portal.tax-dark .rich-separator {
+  background: #1e293b !important;
+}
+
+body.modern-tax-portal.tax-dark fieldset table tr td,
+body.modern-tax-portal.tax-dark table[border="1"] tr td {
+  border-bottom-color: #1e293b !important;
+}
+
+/* Footer copyright */
+body.modern-tax-portal.tax-dark .auxLabel[align="right"],
+body.modern-tax-portal.tax-dark td.auxLabel {
+  color: #64748b !important;
+}

@@ -1,0 +1,67 @@
+{
+  "extName": {
+    "message": "Tax Portal Redesign",
+    "description": "Extension name shown in the Chrome Web Store and toolbar"
+  },
+  "extShortDesc": {
+    "message": "Modern UI redesign for the Armenian tax portal",
+    "description": "Short description shown in the Chrome Web Store"
+  },
+  "popupBrandTitle": {
+    "message": "Portal Redesign"
+  },
+  "popupBrandDomain": {
+    "message": "personal-account.taxservice.am"
+  },
+  "modernUI": {
+    "message": "Modern UI"
+  },
+  "modernUIOn": {
+    "message": "Redesigned interface is on"
+  },
+  "modernUIOff": {
+    "message": "Showing original site styling"
+  },
+  "primaryColor": {
+    "message": "Primary color"
+  },
+  "appearance": {
+    "message": "Appearance"
+  },
+  "appearanceLight": {
+    "message": "Light"
+  },
+  "appearanceDark": {
+    "message": "Dark"
+  },
+  "appearanceSystem": {
+    "message": "System"
+  },
+  "fontSize": {
+    "message": "Text size"
+  },
+  "fontSizeSmaller": {
+    "message": "Smaller"
+  },
+  "fontSizeLarger": {
+    "message": "Larger"
+  },
+  "fontSizeReset": {
+    "message": "Reset"
+  },
+  "shortcutHint": {
+    "message": "Shortcut: Alt + Shift + T"
+  },
+  "autoSave": {
+    "message": "Changes save automatically"
+  },
+  "colorBlue": { "message": "Blue" },
+  "colorIndigo": { "message": "Indigo" },
+  "colorPurple": { "message": "Purple" },
+  "colorPink": { "message": "Pink" },
+  "colorRed": { "message": "Red" },
+  "colorOrange": { "message": "Orange" },
+  "colorGreen": { "message": "Green" },
+  "colorTeal": { "message": "Teal" },
+  "colorSlate": { "message": "Slate" }
+}
