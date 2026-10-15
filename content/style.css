@@ -1053,10 +1053,12 @@ body.modern-tax-portal input[type="password"]:focus {
   box-shadow: 0 0 0 3px rgba(var(--tp-rgb, 37, 99, 235), 0.18) !important;
 }
 
-/* Primary "Մուտք" login button */
+/* Primary submit buttons (login "Մուտք", filter "Գտնել", feedback "Ուղարկել").
+   The login-specific width: 100% is applied below via .login-tipe-button only. */
 body.modern-tax-portal input[type="submit"],
-body.modern-tax-portal input.login-tipe-button {
-  width: 100% !important;
+body.modern-tax-portal input.login-tipe-button,
+body.modern-tax-portal input[type="button"]#mainForm\:sendBtn,
+body.modern-tax-portal input[type="button"][value="Ուղարկել"] {
   background: linear-gradient(135deg, var(--tp, #2563eb) 0%, var(--tp-dark, #1d4ed8) 100%) !important;
   color: #ffffff !important;
   padding: 12px 24px !important;
@@ -1074,7 +1076,9 @@ body.modern-tax-portal input.login-tipe-button {
 }
 
 body.modern-tax-portal input[type="submit"]:hover,
-body.modern-tax-portal input.login-tipe-button:hover {
+body.modern-tax-portal input.login-tipe-button:hover,
+body.modern-tax-portal input[type="button"]#mainForm\:sendBtn:hover,
+body.modern-tax-portal input[type="button"][value="Ուղարկել"]:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 6px 16px rgba(var(--tp-rgb, 37, 99, 235), 0.4) !important;
   background: linear-gradient(135deg, var(--tp-dark, #1d4ed8) 0%, var(--tp-darker, #1e40af) 100%) !important;
@@ -1086,6 +1090,16 @@ body.modern-tax-portal input.login-tipe-button:disabled {
   cursor: not-allowed !important;
   transform: none !important;
   box-shadow: none !important;
+}
+
+/* The login "Մուտք" button is the ONLY one that should fill its row.
+   Everything else — filter submits, feedback send, etc. — stays natural width. */
+body.modern-tax-portal input.login-tipe-button {
+  width: 100% !important;
+}
+
+body.modern-tax-portal #middleCell input[type="submit"] {
+  width: 100% !important;
 }
 
 /* mID / eID selector spans (icon + chevron) */
@@ -1154,6 +1168,192 @@ body.modern-tax-portal #middleCell a.hoverLink {
   color: var(--tp, #2563eb) !important;
   font-size: 13px !important;
   font-weight: 500 !important;
+}
+
+/* ============================================================
+   .form-item layout (ԱՀ քաղվածքի դիմում "Search" filter form)
+   Uses <div class="form-item clearfix"> rows with a label and one
+   or more <div class="left"> inputs floated beside it.
+   ============================================================ */
+
+body.modern-tax-portal .tab-content.clearfix {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.modern-tax-portal .form-item.clearfix {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 2px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  float: none !important;
+}
+
+body.modern-tax-portal .form-item.clearfix:last-child {
+  border-bottom: none !important;
+}
+
+body.modern-tax-portal .form-item.clearfix > label {
+  min-width: 220px !important;
+  margin: 0 !important;
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  text-align: left !important;
+  flex-shrink: 0 !important;
+}
+
+body.modern-tax-portal .form-item.clearfix .left {
+  float: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+
+body.modern-tax-portal .form-item.clearfix .left.short {
+  flex: 0 0 auto !important;
+}
+
+/* Date range separator — gentler grey */
+body.modern-tax-portal .form-item .lines,
+body.modern-tax-portal .form-item.clearfix .lines {
+  color: #94a3b8 !important;
+  padding: 0 6px !important;
+  font-weight: 500 !important;
+}
+
+/* Multi-row select (status filter) — keep native scrollbar but modern frame */
+body.modern-tax-portal select.multiSelect {
+  padding: 6px 10px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #0f172a !important;
+  min-width: 200px !important;
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  -moz-appearance: auto !important;
+}
+
+body.modern-tax-portal select.multiSelect:focus {
+  outline: none !important;
+  border-color: var(--tp, #3b82f6) !important;
+  box-shadow: 0 0 0 3px rgba(var(--tp-rgb, 37, 99, 235), 0.18) !important;
+}
+
+/* The clearfix hack keeps working but doesn't add extra space */
+body.modern-tax-portal .clearfix::after {
+  content: "" !important;
+  display: table !important;
+  clear: both !important;
+}
+
+/* Right-aligned submit row — tighter spacing, no card frame */
+body.modern-tax-portal .tab-content .button-line {
+  background: transparent !important;
+  padding: 12px 0 0 0 !important;
+  margin: 0 !important;
+  text-align: right !important;
+}
+
+/* ============================================================
+   Notifications-page filter: plain <table> inside the panel body
+   with <td width="15%"> labels, <td width="1%">-</td> separator,
+   and a submit button at the end.
+   ============================================================ */
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body > div > table[width="100%"] > tbody > tr > td {
+  padding: 10px 10px !important;
+  color: #0f172a !important;
+  font-size: 13px !important;
+  background: transparent !important;
+  border: none !important;
+  vertical-align: middle !important;
+}
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body > div > table[width="100%"] > tbody > tr > td[width="15%"] {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+body.modern-tax-portal .dr-pnl-b.rich-panel-body > div > table[width="100%"] > tbody > tr > td[width="1%"] {
+  color: #94a3b8 !important;
+  text-align: center !important;
+  padding: 0 4px !important;
+  width: auto !important;
+}
+
+/* Last cell = submit button, hug its content and sit on the right */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body > div > table[width="100%"] > tbody > tr > td:last-child {
+  text-align: right !important;
+  width: 1% !important;
+  white-space: nowrap !important;
+}
+
+/* The filter table itself: collapse borders, let cells have breathing room */
+body.modern-tax-portal .dr-pnl-b.rich-panel-body > div > table[width="100%"] {
+  border-collapse: separate !important;
+  border-spacing: 0 4px !important;
+  margin: 4px 0 !important;
+}
+
+/* First row visual separation on data tables */
+body.modern-tax-portal tr.dr-table-firstrow td,
+body.modern-tax-portal tr.rich-table-firstrow td {
+  border-top: none !important;
+}
+
+/* Give the result table a bit of margin above (follows the <br>) */
+body.modern-tax-portal table.dr-table.rich-table {
+  margin-top: 16px !important;
+}
+
+/* Second column of results (the long notification text) should wrap nicely */
+body.modern-tax-portal td.dr-table-cell.empcol2 {
+  white-space: normal !important;
+  line-height: 1.55 !important;
+  color: #334155 !important;
+}
+
+/* ============================================================
+   .dr-table body rows (notifications results, income-tax app list)
+   — subtle hover + clean cell spacing.
+   ============================================================ */
+
+body.modern-tax-portal tr.dr-table-row,
+body.modern-tax-portal tr.rich-table-row {
+  background: #ffffff !important;
+  transition: background-color 0.15s ease !important;
+}
+
+body.modern-tax-portal tr.dr-table-row:hover,
+body.modern-tax-portal tr.rich-table-row:hover {
+  background: #f8fafc !important;
+}
+
+body.modern-tax-portal td.dr-table-cell,
+body.modern-tax-portal td.rich-table-cell {
+  padding: 12px 12px !important;
+  border: none !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #0f172a !important;
+  font-size: 13px !important;
+  vertical-align: top !important;
+  background: transparent !important;
+  line-height: 1.5 !important;
+}
+
+/* First column (date-ish) in results — compact and muted-weighted */
+body.modern-tax-portal td.dr-table-cell.empcol1 {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  width: 1% !important;
 }
 
 /* ============================================================

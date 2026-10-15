@@ -55,6 +55,9 @@
   "autoSave": {
     "message": "Փոփոխությունները պահպանվում են ինքնաշխատ"
   },
+  "support": {
+    "message": "Աջակցություն"
+  },
   "colorBlue": { "message": "Կապույտ" },
   "colorIndigo": { "message": "Ինդիգո" },
   "colorPurple": { "message": "Մանուշակագույն" },

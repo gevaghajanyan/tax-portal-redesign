@@ -330,6 +330,39 @@ body {
   opacity: 0.5;
 }
 
+/* ---------- Support ---------- */
+.pop-support {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--pop-border);
+}
+
+.pop-support-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pop-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.pop-support-link {
+  font-size: 12px;
+  color: var(--pop-primary);
+  text-decoration: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pop-support-link:hover,
+.pop-support-link:focus-visible {
+  text-decoration: underline;
+}
+
 /* ---------- Footer ---------- */
 .pop-footer {
   display: flex;

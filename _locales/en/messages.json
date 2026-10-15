@@ -55,6 +55,9 @@
   "autoSave": {
     "message": "Changes save automatically"
   },
+  "support": {
+    "message": "Support"
+  },
   "colorBlue": { "message": "Blue" },
   "colorIndigo": { "message": "Indigo" },
   "colorPurple": { "message": "Purple" },
